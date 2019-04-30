@@ -27,8 +27,8 @@ class Bar(EncryptedIDModel):
 
 
 class Baz(models.Model):
-    foo = models.ForeignKey(Foo)
+    foo = models.ForeignKey(Foo, models.CASCADE)
 
 
 class Baz2(EncryptedIDModel):
-    foo = models.ForeignKey(Foo)
+    foo = models.ForeignKey(Foo, models.CASCADE)

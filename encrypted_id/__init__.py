@@ -44,6 +44,8 @@ def encode(the_id):
 
 
 def decode(e):
+    if e is None:
+        raise ValueError()
     if isinstance(e, basestring):
         e = bytes(e.encode("ascii"))
 
@@ -66,7 +68,7 @@ def decode(e):
 def get_object_or_404(m, ekey, *arg, **kw):
     try:
         pk = decode(ekey)
-    except EncryptedIDDecodeError:
+    except (EncryptedIDDecodeError, ValueError):
         raise Http404
 
     return go4(m, id=pk, *arg, **kw)
