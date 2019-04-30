@@ -15,7 +15,6 @@ def test_ekey(db):
     assert db is db
 
     foo = Foo.objects.create(text="asd")
-    assert ekey(foo) == foo.ekey
     assert foo == get_object_or_404(Foo, foo.ekey)
 
 

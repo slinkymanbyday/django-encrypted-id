@@ -36,7 +36,7 @@ def find_this(search, filename=MODULE_PATH):
 print(find_this("__version__"))
 
 setup(
-    name="django-encrypted-id",
+    name="django-encrypted-id-cryptography",
     description="Encrypted IDs for Django Models",
     long_description=long_description,
 
@@ -52,7 +52,7 @@ setup(
 
 
     install_requires=[
-        "Django>=1.8", "PyCrypto",
+        "Django>=1.11", "cryptography",
     ],
 
 

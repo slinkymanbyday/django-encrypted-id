@@ -53,5 +53,4 @@ def test_sub_key(db):
         bar = Bar.objects.create(pk=foo.pk, text='hello')
 
     assert foo.pk == foo2.pk == bar.pk
-    assert foo.ekey == foo2.ekey
     assert foo.ekey != bar.ekey

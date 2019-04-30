@@ -1,5 +1,5 @@
 Django==1.11.2
-PyCrypto
+cryptography
 pytest
 pytest-django
 pytest-pep8
