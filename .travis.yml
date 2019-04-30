@@ -13,7 +13,7 @@ script: tox
 
 notifications:
     email:
-        recipients: upadhyay@gmail.com
+        recipients: slinkymanbyday@gmail.com
         template:
           - "%{repository}@%{branch}: %{message}(%{build_url})"
           - "Build: %{build_number},SHA: %{commit},Committer: %{author},Diff: %{compare_url}"
