@@ -12,7 +12,6 @@ except NameError:
 from cryptography.fernet import Fernet, InvalidToken
 
 import base64
-import binascii
 import hashlib
 
 from django.conf import settings
