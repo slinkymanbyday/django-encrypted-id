@@ -24,7 +24,7 @@ from django.shortcuts import get_object_or_404 as go4
 __version__ = "1.0"
 __license__ = "BSD"
 __author__ = "Sean Meyer"
-__email__ = "slinkymabyday#gmail.com"
+__email__ = "slinkymabyday@gmail.com"
 __url__ = "https://github.com/slinkymanbyday/django-encrypted-id-cryptography"
 __source__ = "https://github.com/slinkymanbyday/django-encrypted-id-cryptography"
 __docformat__ = "html"
@@ -39,8 +39,7 @@ def encode(the_id):
     assert 0 <= the_id < 2 ** 64
     the_id = str(the_id).encode()
     f = Fernet(settings.ID_ENCRYPT_KEY)
-    a = binascii.hexlify(f.encrypt(the_id))
-    return a.decode()
+    return f.encrypt(the_id).decode()
 
 
 def decode(e):
@@ -48,11 +47,6 @@ def decode(e):
         raise ValueError()
     if isinstance(e, basestring):
         e = bytes(e.encode("ascii"))
-
-    try:
-        e = binascii.unhexlify(e)
-    except (TypeError, AttributeError, binascii.Error):
-        raise EncryptedIDDecodeError("Failed to decrypt, invalid input.")
 
     for skey in getattr(settings, "ID_ENCRYPT_KEYS", [settings.ID_ENCRYPT_KEY]):
         try:

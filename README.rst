@@ -1,9 +1,60 @@
-django-encrypted-id-cryptography
-===================
+======================
+Django Encrypted Id (cryptography)
+======================
 
-**Note**: This is a fork of django-encrypted-id which uses cryptography instead of pycrypto. Previous 
+.. image:: https://badge.fury.io/py/django-encrypted-id-cryptography.svg
+    :target: https://badge.fury.io/py/django-encrypted-id-cryptography
 
-----
+
+django-encrypted-id-cryptography is a Django model which allows the use of encrypted ids for when you don't want to expose the regular pk.
+
+**Note: This is a fork from django-encrypted-id and acts *mostly* a drop in replacement, it requires an additional settings and the encrypted ids are not compaitable. It also uses a different crypto library**
+
+
+Requirements
+------------
+The following have been tested, however it should work with more.
+
+* Django [1.11, 2.0, 2.2]
+* Python [2.7, 3.5]
+* Cryptography
+
+Quickstart
+----------
+
+Install django-encrypted-id-cryptography::
+
+    pip install django-encrypted-id-cryptography
+
+
+Create an encryption key:
+
+.. code-block:: python
+
+    > from cryptography.fernet import Fernet
+    > Fernet.generate_key()
+    
+    '3CNek72sQ3syTXX6h-Z1t3OLKKY1lfAgnTW_THUz37M='
+    
+
+.. code-block:: python
+
+    ID_ENCRYPT_KEY = ['3CNek72sQ3syTXX6h-Z1t3OLKKY1lfAgnTW_THUz37M=']
+
+Features
+--------
+
+This password validator returns a ValidationError if the PWNED Passwords API
+detects the password in its data set. Note that the API is heavily rate-limited,
+so there is a timeout (:code:`PWNED_VALIDATOR_TIMEOUT`).
+
+If :code:`PWNED_VALIDATOR_FAIL_SAFE` is True, anything besides an API-identified bad password
+will pass, including a timeout. If :code:`PWNED_VALIDATOR_FAIL_SAFE` is False, anything
+besides a good password will fail and raise a ValidationError.
+
+
+Use
+--------
 
 Consider this example model:
 
@@ -31,7 +82,7 @@ model instances. This is how they will look like:
     Out[3]: 1
 
     In [4]: f.ekey
-    Out[4]: 'bxuZXwM4NdgGauVWR-ueUA'
+    Out[4]: 'gAAAAABcyQ2WlhRT6zec6WCRMJ3mDkZL9SCy98JeMvrERki6DJgc3WeIRMbAMm86_zmV0sP3_iPvbAHGgb7RfEGrnIIYdggaig=='
     You can do reverse lookup:
 
     In [5]: from encrypted_id import decode
@@ -49,7 +100,7 @@ the ``ekey()`` function from ``encrypted_id`` package:
     In [8]: from django.contrib.auth.models import User
 
     In [9]: ekey(User.objects.get(pk=1))
-    Out[9]: 'bxuZXwM4NdgGauVWR-ueUA'
+    Out[9]: 'gAAAAABcyQ2WlhRT6zec6WCRMJ3mDkZL9SCy98JeMvrERki6DJgc3WeIRMbAMm86_zmV0sP3_iPvbAHGgb7RfEGrnIIYdggaig=='
 
 
 To do the reverse lookup, you have two helpers available. First is provided by
@@ -80,7 +131,7 @@ You your manager is not inheriting from ``EncryptedIDManager``, you can use:
     In [12]: e = ekey(User.objects.first())
 
     In [13]: e
-    Out[13]: 'bxuZXwM4NdgGauVWR-ueUA'
+    Out[13]: 'gAAAAABcyQ2WlhRT6zec6WCRMJ3mDkZL9SCy98JeMvrERki6DJgc3WeIRMbAMm86_zmV0sP3_iPvbAHGgb7RfEGrnIIYdggaig=='
 
     In [14]: get_object_or_404(User, e)
     Out[14]: <User: amitu>
@@ -95,45 +146,14 @@ If you are curious, the regex used to match the generated ids is:
 
 .. code-block:: python
 
-    "[0-9a-zA-Z-_]+"
+    "[0-9a-zA-Z-_=]+"
 
 
-If you are using `smarturls <http://amitu.com/smarturls/>`_, you can use URL
-pattern like:
+Running Tests
+-------------
 
-.. code-block:: python
+::
 
-    "/<ekey:foo>/"
-
-
-I recommend this usage of encrypted-id over UUID, as UUIDs have significant
-issues that should be considered (tldr: they take more space on disk and RAM,
-and have inferior indexing than integer ids), and if your goal is simply to
-make URLs non guessable, encrypted id is a superior approach.
-
-If you are curious about the encryption used: I am using ``AES``, from
-``pycrypto`` library, and am using ``SECRET_KEY`` for password
-(``SECRET_KEY[:32]``) and ``IV`` (first 16 characters of hash of ``SECRET_KEY``
-and a *sub_key*), in the ``AES.CBC`` mode. The *sub_key* is taken from the
-model's ``Meta`` attribute ``ek_key``, or simply ``db_table`` if ``ek_key`` is
-not set.
-
-In general it is recommended not to have static ``IV``, but ``CBC`` offsets
-some of the problems with having static IV.  What is the the issue with static
-IV you ask: if plain text "abc" and "abe" are encrypted, the first two bytes
-would be same.  Now this does not present a serious problem for us, as the
-plain text that I am encrypting uses ``CRC32`` in the beginning of payload, so
-even if you have ids, 1, 11, an attacker can not say they both start with same
-first character.
-
-The library also supports the scenario that you have to cycle ``SECRET_KEY``
-due to some reason, so URLs encrypted with older ``SECRET_KEY`` can still be
-decoded after you have changed it (as long as you store old versions in
-``SECRET_KEYS`` setting).  In order to decrypt the library tries each secret
-key, and compares the ``CRC32`` of data to know for sure (as sure as things get
-in such things), that we have decrypted properly.
-
-Do feel free to raise an issue here, if you face any issues, I would be happy
-to help. The library supports both python 2.7 and 3.5, as well as it all
-versions of django that django team supports.
-
+    source <YOURVIRTUALENV>/bin/activate
+    (myenv) $ pip install tox
+    (myenv) $ tox

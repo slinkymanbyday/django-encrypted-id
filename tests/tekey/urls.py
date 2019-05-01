@@ -25,5 +25,5 @@ from tapp.views import FooView
 
 urlpatterns = [
     url('admin/', admin.site.urls),
-    url('foo/(?P<slug>[0-9a-zA-Z]+)/$', FooView.as_view(), name='foo'),
+    url('foo/(?P<slug>[0-9a-zA-Z-_=]+)/$', FooView.as_view(), name='foo'),
 ]
