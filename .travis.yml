@@ -1,13 +1,22 @@
-sudo: false
+dist: xenial
 language: python
 python:
-    - 3.5
+  - 2.7
+  - 3.5
+  - 3.6
+  - 3.7
 
-os:
-    - linux
+cache:
+  apt: true
+  pip: true
+
+addons:
+  apt_packages:
+    - sqlite3
 
 
-before_install: pip install --upgrade tox pip virtualenv wheel setuptools --quiet
+before_install: 
+    - pip install --upgrade tox pip virtualenv wheel setuptools --quiet
 before_script: pyclean --verbose .
 script: tox
 
@@ -19,6 +28,3 @@ notifications:
           - "Build: %{build_number},SHA: %{commit},Committer: %{author},Diff: %{compare_url}"
         on_success: always
         on_failure: always
-
-
-cache: apt
