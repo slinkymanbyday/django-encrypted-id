@@ -14,16 +14,8 @@ addons:
   apt_packages:
     - sqlite3
 
-env:
-  matrix:
-    - TOXENV="py27"
-    - TOXENV="py35"
-    - TOXENV="py36"
-    - TOXENV="py37"
-
 before_install: 
     - pip install --upgrade tox-travis pip virtualenv wheel setuptools --quiet
-    - pyenv global system 2.7 3.5 3.6 3.7
 before_script: pyclean --verbose .
 script: tox
 
