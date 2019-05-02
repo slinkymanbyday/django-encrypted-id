@@ -1,6 +1,6 @@
 def task_aliases():
     aliases = """
-        tests0: tox -e py27-django15
+        tests0: tox -e py27-django111
         tests: tox
         release: python setup.py bdist_wheel sdist --formats=bztar,zip upload
         cleanup: rm -rf .tox

@@ -52,8 +52,10 @@ def decode(e):
             f = Fernet(skey)
             the_id = f.decrypt(e)
             return int(the_id)
-        except (ValueError, InvalidToken):
+        except ValueError:
             raise EncryptedIDDecodeError("Failed to decrypt, invalid input.")
+        except InvalidToken:
+            raise EncryptedIDDecodeError("Failed to decrypt, bad decryption key.")
 
     raise EncryptedIDDecodeError("Failed to decrypt.")
 
