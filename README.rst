@@ -4,6 +4,9 @@ Django Encrypted Id (cryptography)
 
 .. image:: https://badge.fury.io/py/django-encrypted-id-cryptography.svg
     :target: https://badge.fury.io/py/django-encrypted-id-cryptography
+    
+.. image:: https://travis-ci.org/slinkymanbyday/django-encrypted-id-cryptography.svg?branch=master
+    :target: https://travis-ci.org/slinkymanbyday/django-encrypted-id-cryptography
 
 
 django-encrypted-id-cryptography is a Django model which allows the use of encrypted ids for when you don't want to expose the regular pk.
