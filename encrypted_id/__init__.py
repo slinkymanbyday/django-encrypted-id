@@ -71,4 +71,4 @@ def get_object_or_404(m, ekey, *arg, **kw):
 
 def ekey(instance):
     assert isinstance(instance, Model)
-    return encode(instance.id)
+    return encode(instance.pk)
